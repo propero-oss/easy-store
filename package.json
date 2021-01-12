@@ -69,5 +69,8 @@
   "bugs": {
     "url": "https://github.com/propero-oss/easy-store/issues"
   },
-  "homepage": "https://github.com/propero-oss/easy-store#readme"
+  "homepage": "https://github.com/propero-oss/easy-store#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
