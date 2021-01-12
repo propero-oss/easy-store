@@ -7,6 +7,10 @@
   "module": "dist/easy-store.esm.js",
   "unpkg": "dist/easy-store.umd.js",
   "types": "dist/easy-store.esm.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "build:watch": "rollup -cw rollup.config.js",
