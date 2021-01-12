@@ -1,7 +1,9 @@
 import { SubscriberLimitExceededError } from "src/subscribable/errors";
 import { Notifiable, Subscribable, SubscribableOptions, Subscriber } from "src/subscribable/types";
 
-export function createSubscribable<T extends unknown[]>(options?: SubscribableOptions): Subscribable<T> & Notifiable<T> {
+export function createSubscribable<T extends unknown[]>(
+  options?: SubscribableOptions
+): Subscribable<T> & Notifiable<T> {
   const { limit = 100 } = options ?? {};
   const subs: Subscriber<T>[] = [];
 
