@@ -1,23 +1,40 @@
 import { createStore } from "src/store/create-store";
 import {
   DeferredValueGenerator,
+  DependencyHandler,
   DependencyValueTypes,
   Destroyable,
   ReadOnlyStore,
 } from "src/store/types";
-import { SubscribableOptions } from "src/subscribable";
+import { SubscribableOptions, subscribe } from "src/subscribable";
 
-export function deriveStore<Dependencies extends ReadOnlyStore<unknown>[], Return>(
+export function getStoreValues<Stores extends ReadOnlyStore[]>(
+  stores: Stores
+): DependencyValueTypes<Stores> {
+  return stores.map((store) => store.getValue()) as any;
+}
+
+export function dependOnStores<Dependencies extends ReadOnlyStore[]>(
   dependencies: Dependencies,
-  compute: DeferredValueGenerator<Dependencies, Return>,
+  handler: DependencyHandler<Dependencies>,
+  initialCall: boolean = false
+): Destroyable {
+  const wrapper = (): void => handler(...getStoreValues(dependencies));
+  if (initialCall) wrapper();
+  return subscribe(dependencies, wrapper);
+}
+
+export function deriveStore<Dependencies extends ReadOnlyStore[], Value>(
+  dependencies: Dependencies,
+  compute: DeferredValueGenerator<Dependencies, Value>,
   options?: SubscribableOptions
-): ReadOnlyStore<Return> & Destroyable {
-  const values = () =>
-    dependencies.map((dep) => dep.getValue()) as DependencyValueTypes<Dependencies>;
-  const computed = () => compute(...values());
-  const { getValue, setValue, sub, unsub } = createStore(computed(), options);
-  const recompute = () => setValue(computed());
-  dependencies.forEach((dep) => dep.sub(recompute));
-  const destroy = () => dependencies.forEach((dep) => dep.unsub(recompute));
+): ReadOnlyStore<Value> & Destroyable {
+  const { getValue, setValue, sub, unsub } = createStore(
+    compute(...getStoreValues(dependencies)),
+    options
+  );
+  const { destroy } = dependOnStores(dependencies, (...values) => {
+    setValue(compute(...values));
+  });
   return { sub, unsub, getValue, destroy };
 }

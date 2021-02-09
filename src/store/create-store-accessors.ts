@@ -1,9 +1,8 @@
 import { StoreReadAccessors, StoreUpdater, StoreWriteAccessors } from "src/store/types";
-import { SubscribableNotify } from "src/subscribable";
 import { isPromise } from "src/util";
 
 export function createStoreAccessors<T>(
-  notify: SubscribableNotify<[value: T, before: T]>,
+  notify: (value: T, before: T) => void,
   value: T
 ): StoreReadAccessors<T> & StoreWriteAccessors<T> {
   function getValue(): T {
