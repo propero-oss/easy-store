@@ -5,7 +5,7 @@ export interface SubscribableOptions {
   limit?: number;
 }
 
-export interface StoreOptions<T> extends SubscribableOptions {
+export interface StoreOptions extends SubscribableOptions {
   immediatelyNotify?: boolean;
 }
 
@@ -18,10 +18,6 @@ export interface Notifiable<T extends unknown[] = unknown[]> {
   notify(...args: T): void;
 }
 
-export type SubscribableArgs<T extends Subscribable> = T extends Subscribable<infer Args>
-  ? Args
-  : never;
+export type SubscribableArgs<T extends Subscribable> = T extends Subscribable<infer Args> ? Args : never;
 
-export type SubscribableValueGenerator<T extends Subscribable, Value> = (
-  ...values: SubscribableArgs<T>
-) => Value;
+export type SubscribableValueGenerator<T extends Subscribable, Value> = (...values: SubscribableArgs<T>) => Value;
