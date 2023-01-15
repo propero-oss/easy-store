@@ -1,11 +1,6 @@
 import { createStore } from "src/store/create-store";
 import { Destroyable, ReadOnlyStore } from "src/store/types";
-import {
-  Subscribable,
-  SubscribableArgs,
-  SubscribableValueGenerator,
-  subscribe,
-} from "src/subscribable";
+import { Subscribable, SubscribableArgs, SubscribableValueGenerator, subscribe as sub } from "src/subscribable";
 
 const passThrough = <T extends unknown[]>(...args: T): T => args;
 
@@ -14,9 +9,9 @@ export function storeFromSubscribable<Sub extends Subscribable, Value = Subscrib
   value: Value,
   compute: SubscribableValueGenerator<Sub, Value> = passThrough as any
 ): ReadOnlyStore<Value> & Destroyable {
-  const { update, sub, unsub, getValue } = createStore<Value>(value);
-  const { destroy } = subscribe(subscribable, (...args) => {
+  const { update, subscribe, unsubscribe, get } = createStore<Value>(value);
+  const { destroy } = sub(subscribable, (...args) => {
     update(() => compute(...args));
   });
-  return { sub, unsub, getValue, destroy };
+  return { subscribe, unsubscribe, get, destroy };
 }

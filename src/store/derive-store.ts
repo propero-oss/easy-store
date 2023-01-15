@@ -8,10 +8,8 @@ import {
 } from "src/store/types";
 import { SubscribableOptions, subscribe } from "src/subscribable";
 
-export function getStoreValues<Stores extends ReadOnlyStore[]>(
-  stores: Stores
-): DependencyValueTypes<Stores> {
-  return stores.map((store) => store.getValue()) as any;
+export function getStoreValues<Stores extends ReadOnlyStore[]>(stores: Stores): DependencyValueTypes<Stores> {
+  return stores.map((store) => store.get()) as any;
 }
 
 export function dependOnStores<Dependencies extends ReadOnlyStore[]>(
@@ -29,12 +27,9 @@ export function deriveStore<Dependencies extends ReadOnlyStore[], Value>(
   compute: DeferredValueGenerator<Dependencies, Value>,
   options?: SubscribableOptions
 ): ReadOnlyStore<Value> & Destroyable {
-  const { getValue, setValue, sub, unsub } = createStore(
-    compute(...getStoreValues(dependencies)),
-    options
-  );
+  const { get, set, subscribe, unsubscribe } = createStore(compute(...getStoreValues(dependencies)), options);
   const { destroy } = dependOnStores(dependencies, (...values) => {
-    setValue(compute(...values));
+    set(compute(...values));
   });
-  return { sub, unsub, getValue, destroy };
+  return { subscribe, unsubscribe, get, destroy };
 }

@@ -5,11 +5,11 @@ export function createStoreAccessors<T>(
   notify: (value: T, before: T) => void,
   value: T
 ): StoreReadAccessors<T> & StoreWriteAccessors<T> {
-  function getValue(): T {
+  function get(): T {
     return value;
   }
 
-  function setValue(newVal: T): void {
+  function set(newVal: T): void {
     const before = value;
     value = newVal;
     if (newVal !== before) notify(newVal, before);
@@ -19,10 +19,10 @@ export function createStoreAccessors<T>(
   // cause superfluous errors therefore return type is any. Correct typing is defined
   // in StoreWriteAccessors type
   function update(updater: StoreUpdater<T>): any {
-    const result = updater(getValue());
-    if (!isPromise(result)) return setValue(result);
-    return result.then(setValue);
+    const result = updater(get());
+    if (!isPromise(result)) return set(result);
+    return result.then(set);
   }
 
-  return { getValue, setValue, update };
+  return { get, set, update };
 }

@@ -2,10 +2,10 @@ import { createStore, deriveStore } from "src/store";
 
 describe("deferStore", () => {
   it("should create a readonly, destroyable store", async () => {
-    const { sub, unsub, getValue, destroy } = deriveStore([], () => undefined);
-    expect(sub).toBeDefined();
-    expect(unsub).toBeDefined();
-    expect(getValue).toBeDefined();
+    const { subscribe, unsubscribe, get, destroy } = deriveStore([], () => undefined);
+    expect(subscribe).toBeDefined();
+    expect(unsubscribe).toBeDefined();
+    expect(get).toBeDefined();
     expect(destroy).toBeDefined();
   });
 
@@ -13,7 +13,7 @@ describe("deferStore", () => {
     const store1 = createStore(5);
     const store2 = createStore(2);
     const derived = deriveStore([store1, store2], Math.max);
-    expect(derived.getValue()).toEqual(5);
+    expect(derived.get()).toEqual(5);
     derived.destroy();
   });
 
@@ -22,10 +22,10 @@ describe("deferStore", () => {
     const store2 = createStore(2);
     const derived = deriveStore([store1, store2], Math.max);
     const spy = jest.fn();
-    derived.sub(spy);
-    store1.setValue(1);
+    derived.subscribe(spy);
+    store1.set(1);
     expect(spy).toHaveBeenCalledWith(2, 5);
-    store2.setValue(-1);
+    store2.set(-1);
     expect(spy).toHaveBeenLastCalledWith(1, 2);
     derived.destroy();
   });
@@ -35,9 +35,18 @@ describe("deferStore", () => {
     const store2 = createStore(2);
     const derived = deriveStore([store1, store2], Math.max);
     const spy = jest.fn();
-    derived.sub(spy);
+    derived.subscribe(spy);
     derived.destroy();
-    store1.setValue(10);
+    store1.set(10);
     expect(spy).not.toHaveBeenCalled();
   });
+
+  /*it("should preserve types of stores", async () => {
+    const store1 = createStore("test");
+    const store2 = createStore(5);
+    const derived = deriveStore([store1, store2], (str, num) => {
+      const checkStr: string = str;
+      const checkNum: number = num;
+    });
+  });*/
 });

@@ -7,12 +7,13 @@ export function createSubscribable<T extends unknown[]>(
   const { limit = 100 } = options ?? {};
   const subs: Subscriber<T>[] = [];
 
-  function sub(subscriber: Subscriber<T>): void {
+  function subscribe(subscriber: Subscriber<T>): () => void {
     if (subs.length >= limit) throw new SubscriberLimitExceededError();
     subs.push(subscriber);
+    return () => unsubscribe(subscriber);
   }
 
-  function unsub(subscriber: Subscriber<T>): void {
+  function unsubscribe(subscriber: Subscriber<T>): void {
     const index = subs.lastIndexOf(subscriber);
     if (index === -1) return;
     subs.splice(index, 1);
@@ -22,5 +23,5 @@ export function createSubscribable<T extends unknown[]>(
     subs.forEach((sub) => sub(...args));
   }
 
-  return { sub, unsub, notify };
+  return { subscribe, unsubscribe, notify };
 }

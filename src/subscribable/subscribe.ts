@@ -5,8 +5,8 @@ export function subscribeSingle<Sub extends Subscribable>(
   subscribable: Sub,
   handler: (...args: SubscribableArgs<Sub>) => void
 ): Destroyable {
-  subscribable.sub(handler as any);
-  const destroy = (): void => subscribable.unsub(handler as any);
+  subscribable.subscribe(handler as any);
+  const destroy = (): void => subscribable.unsubscribe(handler as any);
   return { destroy };
 }
 
@@ -14,8 +14,8 @@ export function subscribeMultiple<Dependencies extends Subscribable[]>(
   subscribables: Dependencies,
   handler: () => void
 ): Destroyable {
-  subscribables.forEach((subscribable) => subscribable.sub(handler));
-  const destroy = (): void => subscribables.forEach((subscribable) => subscribable.unsub(handler));
+  subscribables.forEach((subscribable) => subscribable.subscribe(handler));
+  const destroy = (): void => subscribables.forEach((subscribable) => subscribable.unsubscribe(handler));
   return { destroy };
 }
 

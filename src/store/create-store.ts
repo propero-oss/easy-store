@@ -1,9 +1,20 @@
 import { createStoreAccessors } from "src/store/create-store-accessors";
 import { MutableStore } from "src/store/types";
-import { createSubscribable, SubscribableOptions } from "src/subscribable";
+import { createSubscribable, StoreOptions, Subscriber } from "src/subscribable";
 
-export function createStore<T>(value: T, options?: SubscribableOptions): MutableStore<T> {
-  const { notify, sub, unsub } = createSubscribable<[value: T, before: T]>(options);
-  const { getValue, setValue, update } = createStoreAccessors(notify, value);
-  return { sub, unsub, getValue, setValue, update };
+export function createStore<T>(value: T, options?: StoreOptions<T>): MutableStore<T> {
+  const {
+    notify,
+    subscribe: sub,
+    unsubscribe,
+  } = createSubscribable<[value: T, before?: T]>(options);
+  const { get, set, update } = createStoreAccessors(notify, value);
+  const { immediatelyNotify = false } = options ?? {};
+
+  function subscribe(handler: Subscriber<[value: T, before?: T]>) {
+    if (immediatelyNotify) handler(get());
+    return sub(handler);
+  }
+
+  return { subscribe, unsubscribe, get, set, update };
 }

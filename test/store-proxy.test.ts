@@ -2,11 +2,12 @@ import { createStore, createStorePropertyAccessor, createStoreProxy } from "src/
 
 describe("createStorePropertyAccessor", () => {
   it("should create a readonly getter for a readonly store", async () => {
-    const { update, setValue, ...store } = createStore({ hello: "world" });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { set, update, ...store } = createStore({ hello: "world" });
     const proxy: Partial<{ hello: string }> = {};
     createStorePropertyAccessor(store, proxy, "hello");
     expect(proxy.hello).toEqual("world");
-    setValue({ hello: "foo" });
+    set({ hello: "foo" });
     expect(proxy.hello).toEqual("foo");
     expect(() => (proxy.hello = "bar")).toThrow();
   });
@@ -17,8 +18,8 @@ describe("createStorePropertyAccessor", () => {
     createStorePropertyAccessor(store, proxy, "foo");
     expect(proxy.foo).toEqual("bar");
     proxy.foo = "baz";
-    expect(store.getValue().foo).toEqual("baz");
-    store.setValue({ foo: "qux" });
+    expect(store.get().foo).toEqual("baz");
+    store.set({ foo: "qux" });
     expect(proxy.foo).toEqual("qux");
   });
 });
@@ -28,10 +29,10 @@ describe("createStoreProxy", () => {
     const store = createStore({ foo: "bar" });
     const { value } = createStoreProxy(store);
     expect(value.foo).toEqual("bar");
-    store.setValue({ foo: "baz" });
+    store.set({ foo: "baz" });
     expect(value.foo).toEqual("baz");
     value.foo = "qux";
-    expect(store.getValue().foo).toEqual("qux");
+    expect(store.get().foo).toEqual("qux");
   });
 
   it("should delete obsolete and create new accessors", async () => {
@@ -39,7 +40,7 @@ describe("createStoreProxy", () => {
     const store = createStore<Foo>({ foo: "bar" });
     const { value } = createStoreProxy(store);
     expect(Object.getOwnPropertyDescriptor(value, "foo")?.get).toBeDefined();
-    store.setValue({ bar: "foo" });
+    store.set({ bar: "foo" });
     expect(Object.getOwnPropertyDescriptor(value, "foo")?.get).not.toBeDefined();
     expect(Object.getOwnPropertyDescriptor(value, "bar")?.get).toBeDefined();
   });
