@@ -6,7 +6,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
 import { terser } from "rollup-plugin-terser";
 import { keys, mapValues, upperFirst, camelCase, template } from "lodash";
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
 
 const { main, dependencies, module, unpkg } = pkg;
 const formatModule = (name) =>
@@ -20,7 +20,7 @@ const name = formatModule(pkg.name);
 /* eslint-disable */
 const banner = template(`
 /**
- * <%= p.nameFormatted %> (<%= p.name %> v<%= p.version %>)
+ * <%= p.nameFormatted %> (<%= p.name %>)
  * <%= p.description %>
  * <%= p.homepage %>
  * (c) <%= p.year %> <%= p.author %>
