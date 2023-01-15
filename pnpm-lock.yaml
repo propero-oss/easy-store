@@ -10,6 +10,7 @@ specifiers:
   '@semantic-release/github': ^8.0.7
   '@semantic-release/npm': ^9.0.2
   '@semantic-release/release-notes-generator': ^10.0.3
+  '@types/jest': ^29.2.5
   '@types/node': ^18.11.18
   '@typescript-eslint/eslint-plugin': ^5.48.1
   '@typescript-eslint/parser': ^5.48.1
@@ -27,6 +28,7 @@ specifiers:
   semantic-release: ^20.0.2
   ts-jest: ^29.0.5
   ts-node: ^10.9.1
+  tslib: ^2.4.1
   typescript: ^4.9.4
 
 devDependencies:
@@ -39,6 +41,7 @@ devDependencies:
   '@semantic-release/github': 8.0.7_semantic-release@20.0.2
   '@semantic-release/npm': 9.0.2_semantic-release@20.0.2
   '@semantic-release/release-notes-generator': 10.0.3_semantic-release@20.0.2
+  '@types/jest': 29.2.5
   '@types/node': 18.11.18
   '@typescript-eslint/eslint-plugin': 5.48.1_oomjohfipuyaxs2zyomcx4f5by
   '@typescript-eslint/parser': 5.48.1_7uibuqfxkfaozanbtbziikiqje
@@ -56,6 +59,7 @@ devDependencies:
   semantic-release: 20.0.2
   ts-jest: 29.0.5_p6ekqnroyms5nhqbfxosryz7rm
   ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
+  tslib: 2.4.1
   typescript: 4.9.4
 
 packages:
@@ -1173,6 +1177,13 @@ packages:
     resolution: {integrity: sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==}
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
+    dev: true
+
+  /@types/jest/29.2.5:
+    resolution: {integrity: sha512-H2cSxkKgVmqNHXP7TC2L/WUorrZu8ZigyRywfVzv6EyBlxj39n4C00hjXYQWsbwqgElaj/CiAeSRmk5GoaKTgw==}
+    dependencies:
+      expect: 29.3.1
+      pretty-format: 29.3.1
     dev: true
 
   /@types/json-schema/7.0.9:
