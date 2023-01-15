@@ -1,6 +1,6 @@
 import sourcemaps from "rollup-plugin-sourcemaps";
 import commonjs from "@rollup/plugin-commonjs";
-import ts from "@wessberg/rollup-plugin-ts";
+import ts from "rollup-plugin-ts";
 import paths from "rollup-plugin-ts-paths";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
