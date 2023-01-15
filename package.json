@@ -12,8 +12,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rollup -c rollup.config.js",
-    "build:watch": "rollup -cw rollup.config.js",
+    "build": "rollup -c rollup.config.mjs",
+    "build:watch": "rollup -cw rollup.config.mjs",
     "clean": "rimraf dist docs coverage",
     "test": "jest",
     "test:watch": "jest --watch",
