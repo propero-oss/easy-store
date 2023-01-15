@@ -15,9 +15,6 @@ export function createStoreAccessors<T>(
     if (newVal !== before) notify(newVal, before);
   }
 
-  // Type of updater is not narrowed by isPromise<result> so return statements here
-  // cause superfluous errors therefore return type is any. Correct typing is defined
-  // in StoreWriteAccessors type
   function update(updater: StoreUpdater<T>): any {
     const result = updater(get());
     if (!isPromise(result)) return set(result);
