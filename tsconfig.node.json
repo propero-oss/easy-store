@@ -1,0 +1,22 @@
+{
+  "extends": "tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "types": ["jest", "node"],
+    "paths": {
+      "src/*": ["src/*"],
+      "test/*": ["test/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "vite.config.ts",
+    "jest.config.ts",
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.node.json"
+  ]
+}

@@ -1,41 +1,29 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "strict": true,
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "checkJs": false,
-    "allowJs": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "outDir": "dist",
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext"],
     "declaration": true,
-    "types": [
-      "jest",
-      "node"
-    ],
-    "lib": [
-      "esnext"
-    ],
+    "sourceMap": true,
+    "isolatedModules": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": "./",
     "paths": {
-      "src/*": ["./src/*"],
-      "test/*": ["./test/*"],
-      "example/*": ["./example/*"]
-    }
+      "src/*": ["src/*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist/types"
   },
+  "references": [{
+    "path": "./tsconfig.node.json"
+  }],
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "example/**/*.ts"
+    "src/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

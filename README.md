@@ -24,7 +24,7 @@ Accessing or updating the current value of a store is as easy as calling getValu
 
 ```typescript
 console.log(myStore.getValue());
-myStore.setValue(newValue);
+myStore.set(newValue);
 ```
 
 Additionally, you can use the update function to change the value of a store based on its current value.
@@ -44,13 +44,13 @@ myStore.update(async value => {
 You can subscribe or unsubscribe to change in a store using the sub and unsub functions.
 
 ```typescript
-myStore.setValue(0);
-myStore.sub((newVal, oldVal) => console.log(`Change from ${oldVal} to ${newVal}`));
+myStore.set(0);
+myStore.subscribe((newVal, oldVal) => console.log(`Change from ${oldVal} to ${newVal}`));
 
-myStore.setValue(10);
+myStore.set(10);
 // => Change from 0 to 10
 
-myStore.setValue(5);
+myStore.set(5);
 // => Change from 10 to 5
 ```
 
@@ -60,10 +60,10 @@ The first argument of deriveStore is its dependent stores, the second is a funct
 const firstStore = createStore(10);
 const secondStore = createStore(20);
 const maxStore = deriveStore([firstStore, secondStore], Math.max);
-// maxStore.getValue() => 20
+// maxStore.get() => 20
 
-secondStore.setValue(5);
-// maxStore.getValue() => 10
+secondStore.set(5);
+// maxStore.get() => 10
 ```
 
 This module also exposes a createSubscribable method to create simple pub-subs.

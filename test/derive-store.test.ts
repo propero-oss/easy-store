@@ -1,52 +1,58 @@
-import { createStore, deriveStore } from "src/store";
+import { createStore } from "src/create-store";
+import { deriveStore } from "src/derive-store";
 
-describe("deferStore", () => {
-  it("should create a readonly, destroyable store", async () => {
-    const { subscribe, unsubscribe, get, destroy } = deriveStore([], () => undefined);
-    expect(subscribe).toBeDefined();
-    expect(unsubscribe).toBeDefined();
-    expect(get).toBeDefined();
-    expect(destroy).toBeDefined();
+describe("deriveStore", () => {
+  it("should create a store with derived values", async () => {
+    const a = createStore(1);
+    const b = createStore(2);
+    const derived = deriveStore([a, b], (a, b) => a + b);
+    expect(derived.get()).toEqual(3);
+    b.set(5);
+    expect(derived.get()).toEqual(6);
   });
-
-  it("should calculate its initial value", async () => {
-    const store1 = createStore(5);
-    const store2 = createStore(2);
-    const derived = deriveStore([store1, store2], Math.max);
-    expect(derived.get()).toEqual(5);
+  it("should support asynchronously deriving values", async () => {
+    const a = createStore(1);
+    const b = createStore(2);
+    const derived = deriveStore(
+      [a, b],
+      async (a, b) => {
+        await sleep(10);
+        return a + b;
+      },
+      0
+    );
+    expect(derived.get()).toEqual(0);
+    await sleep(20);
+    expect(derived.get()).toEqual(3);
+    a.set(5);
+    await sleep(20);
+    expect(derived.get()).toEqual(7);
+  });
+  it("should be destroyable (unregister updates)", async () => {
+    const a = createStore(10);
+    const derived = deriveStore([a], (a) => a + 10);
+    expect(derived.get()).toEqual(20);
     derived.destroy();
+    a.set(20);
+    expect(derived.get()).toEqual(20);
   });
-
-  it("should notify parties if any of the depended uppon stores change their value", async () => {
-    const store1 = createStore(5);
-    const store2 = createStore(2);
-    const derived = deriveStore([store1, store2], Math.max);
-    const spy = jest.fn();
-    derived.subscribe(spy);
-    store1.set(1);
-    expect(spy).toHaveBeenCalledWith(2, 5);
-    store2.set(-1);
-    expect(spy).toHaveBeenLastCalledWith(1, 2);
-    derived.destroy();
-  });
-
-  it("should no longer notify parties after destroy() was called", async () => {
-    const store1 = createStore(5);
-    const store2 = createStore(2);
-    const derived = deriveStore([store1, store2], Math.max);
-    const spy = jest.fn();
-    derived.subscribe(spy);
-    derived.destroy();
-    store1.set(10);
-    expect(spy).not.toHaveBeenCalled();
-  });
-
-  /*it("should preserve types of stores", async () => {
-    const store1 = createStore("test");
-    const store2 = createStore(5);
-    const derived = deriveStore([store1, store2], (str, num) => {
-      const checkStr: string = str;
-      const checkNum: number = num;
+  it("should infer types from store arguments", async () => {
+    const x = createStore(10);
+    const y = createStore(10);
+    const desc = createStore("X times Y is Z");
+    const derived = deriveStore([x, y, desc] as const, (x, y, desc) => {
+      const z = x * y;
+      return desc
+        .replace("X", x.toString())
+        .replace("Y", y.toString())
+        .replace("Z", z.toString());
     });
-  });*/
+    expect(derived.get()).toEqual("10 times 10 is 100");
+  });
 });
+
+function sleep(ms: number) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
